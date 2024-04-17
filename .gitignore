@@ -5,6 +5,11 @@ x64
 x86
 
 # Prerequisites
+.vs*
+*.vcx*
+*.sln
+x64
+x86
 *.d
 
 # Compiled Object files
