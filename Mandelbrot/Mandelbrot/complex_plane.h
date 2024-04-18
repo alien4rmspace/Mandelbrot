@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <complex>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
@@ -35,6 +36,6 @@ private:
 	
 	VertexArray m_vArray;
 
-	//int countIterations(Vector2f coord);
-	//void iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b);
+	size_t countIterations(Vector2f coord);
+	void iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b);
 };
