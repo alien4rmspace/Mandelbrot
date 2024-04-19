@@ -21,10 +21,12 @@ void ComplexPlane::updateRender() {
 		for (int y = 0; y < this->m_pixelHeight; y++) {
 			for (int x = 0; x < this->m_pixelWidth; x++) {
 				this->m_vArray[x + y * m_pixelWidth].position = { (float)x, (float)y };
-				// mapPixelToCoords here
-				//countIterations();
+				Vector2i screenCoord = { x, y };
+				Vector2f mapPixel = { mapPixelToCoords(screenCoord) };
+
+				countIterations(mapPixel);
 				Uint8 r, g, b = 0;
-				//iterationsToRGB(countIterations(mapPixelToCoords()), r, g, b);
+				iterationsToRGB(countIterations(mapPixel), r, g, b);
 				this->m_vArray[x + y * m_pixelWidth].color = { r, g, b };
 			}
 		}
@@ -56,7 +58,20 @@ void ComplexPlane::zoomOut() {
 }
 
 void ComplexPlane::setCenter(Vector2i mousePixel) {
-	
+	Vector2f complexCoord = mapPixelToCoords(mousePixel);
+
+	this->m_planeCenter = complexCoord;
+	m_state = CALCULATING;
+}
+
+void ComplexPlane::setMouseLocation(Vector2i mousePixel) {
+	Vector2f complexCoord = mapPixelToCoords(mousePixel);
+
+	this->m_mouseLocation = complexCoord;
+}
+
+void ComplexPlane::loadText(Text& text) {
+
 }
 
 size_t ComplexPlane::countIterations(Vector2f coord) {

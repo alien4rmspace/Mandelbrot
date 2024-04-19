@@ -22,6 +22,8 @@ public:
 	void zoomIn();
 	void zoomOut();
 	void setCenter(Vector2i mousePixel);
+	void setMouseLocation(Vector2i mousePixel);
+	void loadText(Text& text);
 
 private:
 	unsigned short m_pixelWidth;

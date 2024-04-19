@@ -7,7 +7,7 @@
 using namespace std;
 using namespace sf;
 
-void handleInput(RenderWindow& window) {
+void handleInput(RenderWindow& window, ComplexPlane& complexPlane) {
 	Event event;
 
 	while (window.pollEvent(event)) {
@@ -32,14 +32,15 @@ void handleInput(RenderWindow& window) {
 					cout << "mouse x: " << event.mouseButton.x << endl;
 					cout << "mouse y: " << event.mouseButton.y << endl;
 
-					// Implement zoomIn() here
+					complexPlane.zoomIn();
+
 				}
 				if (event.mouseButton.button == Mouse::Right) {
 					cout << "Right mouse button was pressed" << endl;
 					cout << "mouse x: " << event.mouseButton.x << endl;
 					cout << "mouse y: " << event.mouseButton.y << endl;
 
-					// Implement zoomOut() here
+					complexPlane.zoomOut();
 				}
 				break;
 			}
@@ -57,7 +58,7 @@ int main() {
 	ComplexPlane complexPlane(windowWidth, windowHeight);
 
 	while (window.isOpen()) {
-		handleInput(window);
+		handleInput(window, complexPlane);
 		complexPlane.updateRender();
 		//complexPlane.loadText();
 
