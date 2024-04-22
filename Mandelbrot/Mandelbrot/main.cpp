@@ -33,7 +33,7 @@ void handleInput(RenderWindow& window, ComplexPlane& complexPlane) {
 					cout << "mouse y: " << event.mouseButton.y << endl;
 
 					complexPlane.zoomIn();
-
+					complexPlane.setCenter({ event.mouseButton.x , event.mouseButton.y });
 				}
 				if (event.mouseButton.button == Mouse::Right) {
 					cout << "Right mouse button was pressed" << endl;

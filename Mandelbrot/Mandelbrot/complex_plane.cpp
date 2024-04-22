@@ -22,9 +22,8 @@ void ComplexPlane::updateRender() {
 			for (int x = 0; x < this->m_pixelWidth; x++) {
 				this->m_vArray[x + y * m_pixelWidth].position = { (float)x, (float)y };
 				Vector2i screenCoord = { x, y };
-				Vector2f mapPixel = { mapPixelToCoords(screenCoord) };
+				Vector2f mapPixel = mapPixelToCoords(screenCoord);
 
-				countIterations(mapPixel);
 				Uint8 r, g, b = 0;
 				iterationsToRGB(countIterations(mapPixel), r, g, b);
 				this->m_vArray[x + y * m_pixelWidth].color = { r, g, b };
@@ -88,40 +87,57 @@ size_t ComplexPlane::countIterations(Vector2f coord) {
 		z = z * z + c;
 		iterations++;
 	}
-
 	return iterations;
 }
 
 void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b) {
-	if (count > 54 && count < MAX_ITER){
-		r = 255;
-	}
-	if (count > 44 && count < MAX_ITER) {
-		b = 255;
-	}
-	if (count > 34 && count < MAX_ITER) {
+	if (count >= 64){
 		r = 0;
+		b = 0;
+		g = 0;
 	}
-	if (count > 24 && count < MAX_ITER) {
+	else if (count >= 54) {
+		r = 255;
+		b = 0;
+		g = 0;
+	}
+	else if (count >= 45) {
+		r = 255;
+		b = 255;
+		g = 0;
+	}
+	else if (count >= 34) {
+		r = 255;
+		b = 255;
 		g = 255;
 	}
-	if (count > 14 && count < MAX_ITER) {
-		b = 0;
+	else if (count >= 24) {
+		r = 0;
+		b = 255;
+		g = 255;
 	}
-	if (count > 4 && count < MAX_ITER) {
-		r = 255;
+	else if (count >= 14) {
+		r = 112;
+		b = 128;
+		g = 144;
+
+	}
+	else if (count >= 0) {
+		r = 220;
+		b = 220;
+		g = 220;
 	}
 }
 
 Vector2f ComplexPlane::mapPixelToCoords(Vector2i mousePixel) {
-	Vector2i displayPixel_x = { 0, 1920 }; // I'm not sure how to dynamically change this, this is just assuming monitor is 1080p
-	Vector2i displayPixel_y = { 1080, 0 };
+	Vector2i displayPixel_x = { 0, m_pixelWidth }; // I'm not sure how to dynamically change this, this is just assuming monitor is 1080p
+	Vector2i displayPixel_y = { m_pixelHeight, 0 };
 	
 	float normalized_x = static_cast<float>(mousePixel.x - displayPixel_x.x) / (displayPixel_x.y - displayPixel_x.x);
 	float normalized_y = static_cast<float>(mousePixel.y - displayPixel_y.x) / (displayPixel_y.y - displayPixel_y.x);
 
 	float mapped_x = normalized_x * (this->m_planeSize.x) + (this->m_planeCenter.x - this->m_planeSize.x / 2);
 	float mapped_y = normalized_y * (this->m_planeSize.y) + (this->m_planeCenter.y - this->m_planeSize.y / 2);
-
+	
 	return Vector2f (mapped_x , mapped_y);
 }
