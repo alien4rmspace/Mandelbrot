@@ -18,17 +18,57 @@ void ComplexPlane::draw(RenderTarget& target, RenderStates state) const {
 
 void ComplexPlane::updateRender() {
 	if (m_state == CALCULATING) {
-		for (int y = 0; y < this->m_pixelHeight; y++) {
-			for (int x = 0; x < this->m_pixelWidth; x++) {
-				this->m_vArray[x + y * m_pixelWidth].position = { (float)x, (float)y };
-				Vector2i screenCoord = { x, y };
-				Vector2f mapPixel = mapPixelToCoords(screenCoord);
 
-				Uint8 r, g, b = 0;
-				iterationsToRGB(countIterations(mapPixel), r, g, b);
-				this->m_vArray[x + y * m_pixelWidth].color = { r, g, b };
+		Clock clock;
+
+		//for (int y = 0; y < this->m_pixelHeight; y++) {
+		//	for (int x = 0; x < this->m_pixelWidth; x++) {
+		//		this->m_vArray[x + y * m_pixelWidth].position = { (float)x, (float)y };
+		//		Vector2i screenCoord = { x, y };
+		//		Vector2f mapPixel = mapPixelToCoords(screenCoord);
+
+		//		Uint8 r, g, b = 0;
+		//		iterationsToRGB(countIterations(mapPixel), r, g, b);
+		//		this->m_vArray[x + y * m_pixelWidth].color = { r, g, b };
+		//	}
+		//}
+
+		auto threadUpdate1_function = [this]() {
+			for (int y = 0; y < this->m_pixelHeight; y += 2) {
+				for (int x = 0; x < this->m_pixelWidth; x++) {
+					this->m_vArray[x + y * m_pixelWidth].position = { (float)x, (float)y };
+					Vector2i screenCoord = { x, y };
+					Vector2f mapPixel = mapPixelToCoords(screenCoord);
+
+					Uint8 r, g, b = 0;
+					iterationsToRGB(countIterations(mapPixel), r, g, b);
+					this->m_vArray[x + y * m_pixelWidth].color = { r, g, b };
+				}
 			}
-		}
+			};
+
+		auto threadUpdate2_function = [this]() {
+			for (int y = 1; y < this->m_pixelHeight; y += 2) {
+				for (int x = 0; x < this->m_pixelWidth; x++) {
+					this->m_vArray[x + y * m_pixelWidth].position = { (float)x, (float)y };
+					Vector2i screenCoord = { x, y };
+					Vector2f mapPixel = mapPixelToCoords(screenCoord);
+
+					Uint8 r, g, b = 0;
+					iterationsToRGB(countIterations(mapPixel), r, g, b);
+					this->m_vArray[x + y * m_pixelWidth].color = { r, g, b };
+				}
+			}
+			};
+
+		thread threadUpdate1(threadUpdate1_function);
+		thread threadUpdate2(threadUpdate2_function);
+
+		threadUpdate1.join();
+		threadUpdate2.join();
+
+		Time timer = clock.getElapsedTime();
+		cout << "Milliseconds taken to calculate " << timer.asMilliseconds() << endl;
 
 		m_state = DISPLAYING;
 	}
