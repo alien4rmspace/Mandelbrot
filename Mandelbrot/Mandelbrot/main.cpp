@@ -44,6 +44,10 @@ void handleInput(RenderWindow& window, ComplexPlane& complexPlane) {
 				}
 				break;
 			}
+			case Event::MouseMoved: {
+				complexPlane.setMouseLocation({ event.mouseButton.x, event.mouseButton.y });
+				break;
+			}
 			default: break;
 		}
 	}
@@ -54,18 +58,23 @@ int main() {
 	unsigned short windowWidth = VideoMode::getDesktopMode().width / 2;
 	unsigned short windowHeight = VideoMode::getDesktopMode().height / 2;
 	window.create(VideoMode(windowWidth, windowHeight), "Mandelbrot", Style::Default);
+	Text text;
+	Font font;
+	font.loadFromFile("ARIAL.ttf");
+	text.setFont(font);
+	text.setCharacterSize(20);
 
 	ComplexPlane complexPlane(windowWidth, windowHeight);
 
 	while (window.isOpen()) {
 		handleInput(window, complexPlane);
 		complexPlane.updateRender();
-		//complexPlane.loadText();
+		complexPlane.loadText(text);
 
 		// Drawing Stage
 		window.clear();
 		window.draw(complexPlane);
-		//window.draw(text);
+		window.draw(text);
 
 		window.display();
 	}

@@ -90,7 +90,6 @@ void ComplexPlane::updateRender() {
 			}
 			};
 
-
 		thread threadUpdate1(threadUpdate1_function);
 		thread threadUpdate2(threadUpdate2_function);
 		thread threadUpdate3(threadUpdate3_function);
@@ -102,7 +101,7 @@ void ComplexPlane::updateRender() {
 		threadUpdate4.join();
 
 		Time timer = clock.getElapsedTime();
-		cout << "Milliseconds taken to calculate " << timer.asMilliseconds() << endl;
+		cout << "Milliseconds taken to update " << timer.asMilliseconds() << endl;
 
 		m_state = DISPLAYING;
 	}
@@ -144,7 +143,14 @@ void ComplexPlane::setMouseLocation(Vector2i mousePixel) {
 }
 
 void ComplexPlane::loadText(Text& text) {
+	stringstream stream;
+	stream << "Mandelbrot Set" << endl;
+	stream << "Center: (" << m_planeCenter.x << "," << m_planeCenter.y << ")" << endl;
+	stream << fixed << setprecision(2) << "Cursor: (" << m_mouseLocation.x << "," << m_mouseLocation.y << ")" << endl;
+	stream << "Left-click to Zoom in" << endl;
+	stream << "Right-click to Zoom out" << endl;
 
+	text.setString(stream.str());
 }
 
 size_t ComplexPlane::countIterations(Vector2f coord) {

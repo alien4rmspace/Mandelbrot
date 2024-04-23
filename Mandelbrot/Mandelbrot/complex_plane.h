@@ -2,6 +2,8 @@
 #include <iostream>
 #include <complex>
 #include <thread>
+#include <iomanip>
+#include <fstream>
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
